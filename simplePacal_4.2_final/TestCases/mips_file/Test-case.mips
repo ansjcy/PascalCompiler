@@ -1,0 +1,77 @@
+.macro print_int (%x)
+	li $v0, 1
+	add $a0, $zero, %x
+	syscall
+.end_macro
+
+.macro print_char (%x)
+	li $v0, 11
+	add $a0, $zero, %x
+	syscall
+.end_macro
+
+.macro print_str (%str)
+	.data
+		myLabel: .asciiz %str
+
+	.text
+	li $v0, 4
+	la $a0, myLabel
+	syscall
+.end_macro
+
+addi $sp, $sp,   -100
+add  $fp, $zero, $sp
+testcase0:
+sw $ra, 0($fp)
+addi $v0, $zero, 3
+add $t0, $zero, $fp
+addi $t0, $t0, 8
+sw $v0, 0($t0)
+add $t0, $zero, $fp
+lw $v0, 8($t0)
+addi $t1, $zero, 1
+bne  $v0, $t1 nextcaseaddr_2
+addi $v0, $zero, 1
+add $t0, $zero, $fp
+addi $t0, $t0, 12
+sw $v0, 0($t0)
+j endcaseaddr_1
+nextcaseaddr_2:
+addi $t1, $zero, 2
+bne  $v0, $t1 nextcaseaddr_3
+addi $v0, $zero, 2
+add $t0, $zero, $fp
+addi $t0, $t0, 12
+sw $v0, 0($t0)
+j endcaseaddr_1
+nextcaseaddr_3:
+addi $t1, $zero, 3
+bne  $v0, $t1 nextcaseaddr_4
+addi $v0, $zero, 3
+add $t0, $zero, $fp
+addi $t0, $t0, 12
+sw $v0, 0($t0)
+j endcaseaddr_1
+nextcaseaddr_4:
+addi $t1, $zero, 4
+bne  $v0, $t1 nextcaseaddr_5
+addi $v0, $zero, 4
+add $t0, $zero, $fp
+addi $t0, $t0, 12
+sw $v0, 0($t0)
+j endcaseaddr_1
+nextcaseaddr_5:
+endcaseaddr_1:
+print_str("b=")
+addi $t0, $zero, 10
+print_char($t0)
+add $t0, $zero, $fp
+lw $v0, 12($t0)
+add $t0, $zero, $v0
+print_int($t0)
+addi $t0, $zero, 10
+print_char($t0)
+addi $sp, $sp, 100
+addi $v0, $zero, 17
+syscall

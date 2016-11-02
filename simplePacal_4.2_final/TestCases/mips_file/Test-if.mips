@@ -1,0 +1,78 @@
+.macro print_int (%x)
+	li $v0, 1
+	add $a0, $zero, %x
+	syscall
+.end_macro
+
+.macro print_char (%x)
+	li $v0, 11
+	add $a0, $zero, %x
+	syscall
+.end_macro
+
+.macro print_str (%str)
+	.data
+		myLabel: .asciiz %str
+
+	.text
+	li $v0, 4
+	la $a0, myLabel
+	syscall
+.end_macro
+
+addi $sp, $sp,   -100
+add  $fp, $zero, $sp
+if20:
+sw $ra, 0($fp)
+addi $v0, $zero, 1
+add $t0, $zero, $fp
+addi $t0, $t0, 8
+sw $v0, 0($t0)
+addi $v0, $zero, 2
+add $t0, $zero, $fp
+addi $t0, $t0, 12
+sw $v0, 0($t0)
+add $t0, $zero, $fp
+lw $v0, 8($t0)
+addi $sp, $sp, -4
+sw $v0, 0($sp)
+add $t0, $zero, $fp
+lw $v0, 12($t0)
+lw $t1, 0($sp)
+add $v0, $t1, $v0
+addi $sp, $sp, 4
+addi $sp, $sp, -4
+sw $v0, 0($sp)
+addi $v0, $zero, 3
+lw $v1, 0($sp)
+sgt $v0, $v1, $v0
+addi $sp, $sp, 4
+beq $v0, $zero, else_1
+print_str("a+b>3")
+j endif_1
+else_1:
+add $t0, $zero, $fp
+lw $v0, 8($t0)
+addi $sp, $sp, -4
+sw $v0, 0($sp)
+add $t0, $zero, $fp
+lw $v0, 12($t0)
+lw $t1, 0($sp)
+add $v0, $t1, $v0
+addi $sp, $sp, 4
+addi $sp, $sp, -4
+sw $v0, 0($sp)
+addi $v0, $zero, 3
+lw $v1, 0($sp)
+slt $v0, $v1, $v0
+addi $sp, $sp, 4
+beq $v0, $zero, else_2
+print_str("a+b<3")
+j endif_2
+else_2:
+print_str("a+b=3")
+endif_2:
+endif_1:
+addi $sp, $sp, 100
+addi $v0, $zero, 17
+syscall
